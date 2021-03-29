@@ -20,6 +20,10 @@
 
 U8G2_SSD1309_128X64_NONAME0_F_4W_HW_SPI u8g2(U8G2_R2, UEXT_SPI_CS_PIN, UEXT_I2C_SCL_PIN, UEXT_I2C_SDA_PIN);
 
+
+int countdownMillis = 10000;
+
+
 void setup() {
     pinMode(SWITCH_PIN, INPUT_PULLUP);
     pinMode(ENCODER_SW_PIN, INPUT_PULLUP);
@@ -34,16 +38,12 @@ void setup() {
 void loop() {
     u8g2.clearBuffer();
 
-
     u8g2.setFont(u8g2_font_ncenB08_tr);
 
+    int millisRemaining = countdownMillis - millis();
 
-    if (digitalRead(SWITCH_PIN) == LOW) {
-      u8g2.drawStr(16, 16, "Hello Redeye!");
-    } else {
-      u8g2.drawStr(16, 16, "Hello World");
-    }
-
+    String text = String(millisRemaining/1000) + " s";
+    u8g2.drawStr(16, 16, text.c_str());
 
 
     u8g2.sendBuffer();
