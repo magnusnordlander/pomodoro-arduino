@@ -46,5 +46,12 @@ void loop() {
     u8g2.drawStr(16, 16, text.c_str());
 
 
+    if (millisRemaining <= 0) {
+      digitalWrite(ON_BOARD_LED_PIN, HIGH);
+    } else {
+      digitalWrite(ON_BOARD_LED_PIN, LOW);
+    }
+
+
     u8g2.sendBuffer();
 }
