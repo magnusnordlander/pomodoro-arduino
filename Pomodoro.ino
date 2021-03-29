@@ -1,3 +1,6 @@
+#include <U8g2lib.h>
+#include <U8x8lib.h>
+
 // DT and CLK must be interrupt pins
 #define ENCODER_SW_PIN 4
 #define ENCODER_DT_PIN 3
@@ -15,19 +18,33 @@
 #define UEXT_I2C_SCL_PIN 19
 #define UEXT_I2C_SDA_PIN 18
 
+U8G2_SSD1309_128X64_NONAME0_F_4W_HW_SPI u8g2(U8G2_R2, UEXT_SPI_CS_PIN, UEXT_I2C_SCL_PIN, UEXT_I2C_SDA_PIN);
+
 void setup() {
     pinMode(SWITCH_PIN, INPUT_PULLUP);
     pinMode(ENCODER_SW_PIN, INPUT_PULLUP);
 
     pinMode(ON_BOARD_LED_PIN, OUTPUT);
+
+    u8g2.begin();
 }
 
 
 
 void loop() {
+    u8g2.clearBuffer();
+
+
+    u8g2.setFont(u8g2_font_ncenB08_tr);
+
+
     if (digitalRead(SWITCH_PIN) == LOW) {
-      digitalWrite(ON_BOARD_LED_PIN, HIGH);
+      u8g2.drawStr(16, 16, "Hello Redeye!");
     } else {
-      digitalWrite(ON_BOARD_LED_PIN, LOW);
+      u8g2.drawStr(16, 16, "Hello World");
     }
+
+
+
+    u8g2.sendBuffer();
 }
