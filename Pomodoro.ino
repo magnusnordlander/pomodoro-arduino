@@ -22,6 +22,8 @@ U8G2_SSD1309_128X64_NONAME0_F_4W_HW_SPI u8g2(U8G2_R2, UEXT_SPI_CS_PIN, UEXT_I2C_
 
 
 int countdownMillis = 10000;
+int countdownStart = 0;
+bool countdownGoing = false;
 
 
 void setup() {
@@ -37,17 +39,28 @@ void setup() {
 
 void loop() {
     u8g2.clearBuffer();
-
     u8g2.setFont(u8g2_font_ncenB08_tr);
 
-    int millisRemaining = countdownMillis - millis();
+    if (digitalRead(SWITCH_PIN) == LOW) {
+      countdownStart = millis();
+      countdownGoing = true;
+    }
+    
 
-    String text = String(millisRemaining/1000) + " s";
-    u8g2.drawStr(16, 16, text.c_str());
+    int millisRemaining = countdownStart + countdownMillis - millis();
 
 
-    if (millisRemaining <= 0) {
+    if (countdownGoing) {
+      String text = String(millisRemaining/1000) + " s";
+      u8g2.drawStr(16, 16, text.c_str());
+    } else {
+      u8g2.drawStr(16, 16, "No timer running");   
+    }
+    
+
+    if (!countdownGoing || millisRemaining <= 0) {
       digitalWrite(ON_BOARD_LED_PIN, HIGH);
+      countdownGoing = false;
     } else {
       digitalWrite(ON_BOARD_LED_PIN, LOW);
     }
