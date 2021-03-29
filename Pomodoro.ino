@@ -54,7 +54,10 @@ void loop() {
       String text = String(millisRemaining/1000) + " s";
       u8g2.drawStr(16, 16, text.c_str());
     } else {
-      u8g2.drawStr(16, 16, "No timer running");   
+      u8g2.drawStr(16, 16, "No timer running");
+
+      String text = String(String("Ready for " + countdownMillis/1000) + "s");
+      u8g2.drawStr(16, 26, text.c_str());
     }
     
 
