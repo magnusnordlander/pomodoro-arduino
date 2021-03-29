@@ -1,5 +1,7 @@
+#include <Encoder.h>
 #include <U8g2lib.h>
 #include <U8x8lib.h>
+
 
 // DT and CLK must be interrupt pins
 #define ENCODER_SW_PIN 4
@@ -20,10 +22,12 @@
 
 U8G2_SSD1309_128X64_NONAME0_F_4W_HW_SPI u8g2(U8G2_R2, UEXT_SPI_CS_PIN, UEXT_I2C_SCL_PIN, UEXT_I2C_SDA_PIN);
 
-
-int countdownMillis = 10000;
+int countdownMillisDefault = 10000;
+int countdownMillis = countdownMillisDefault;
 int countdownStart = 0;
 bool countdownGoing = false;
+
+Encoder encoder(ENCODER_DT_PIN, ENCODER_CLK_PIN);
 
 
 void setup() {
@@ -41,11 +45,14 @@ void loop() {
     u8g2.clearBuffer();
     u8g2.setFont(u8g2_font_ncenB08_tr);
 
+    long encoderPosition = encoder.read();
+    countdownMillis = countdownMillisDefault + (encoderPosition * 100);
+    
+
     if (digitalRead(SWITCH_PIN) == LOW) {
       countdownStart = millis();
       countdownGoing = true;
     }
-    
 
     int millisRemaining = countdownStart + countdownMillis - millis();
 
